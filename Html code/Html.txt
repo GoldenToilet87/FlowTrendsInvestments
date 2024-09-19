@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlowTrend Investments - Admin Login</title>
+    <!-- FontAwesome CDN for social media icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preload" href="https://i.ibb.co/CBrf4tD/whop-icon.png" as="image">
+    <link rel="preload" href="https://i.ibb.co/M5TwY7s/new-twitter-icon.png" as="image">
+    <!-- ethers.js library for blockchain interaction -->
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.5.4/dist/ethers.min.js"></script>
+    <!-- Custom script for website functionality -->
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+        <div class="left-section">
+            <!-- Dropdown-Enabled Logo with Spinning Effect -->
+            <div class="logo-dropdown">
+                <img id="logo-btn" src="https://i.ibb.co/6F2FSg6/company-logo.png" alt="Company Logo" style="width: 50px; height: 50px; cursor: pointer;">
+                <span class="logo-text">FlowTrend Investments</span>
+                <div id="dropdown-menu" class="dropdown-menu">
+                    <a href="signup-step1.html">Sign Up</a>
+                    <a href="javascript:void(0)" id="admin-login" class="admin-only hidden">Admin Login</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Updated Centered Menu Links -->
+        <nav class="centered-menu">
+            <a href="#top" id="home-link">Home</a>
+            <a href="#membership">Membership Plans</a>
+            <a href="#calendar">Calendar</a>
+            <a href="#leaderboards">Leaderboards</a>
+            <a href="#features">Features and Integrations</a>
+        </nav>
+
+        <!-- Social Media Icons -->
+        <div class="social-icons">
+            <a href="https://whop.com" target="_blank" class="social-btn">
+                <img src="https://i.ibb.co/CBrf4tD/whop-icon.png" alt="Whop Icon" style="width: 24px; height: 24px;">
+            </a>
+            <a href="https://www.discord.com" target="_blank" class="social-btn">
+                <i class="fab fa-discord"></i>
+            </a>
+            <a href="https://www.twitter.com" target="_blank" class="social-btn">
+                <img src="https://i.ibb.co/M5TwY7s/new-twitter-icon.png" alt="New Twitter Icon" style="width: 24px; height: 24px;">
+            </a>
+            <a href="https://www.youtube.com" target="_blank" class="social-btn">
+                <i class="fab fa-youtube"></i>
+            </a>
+            <a href="https://www.linkedin.com" target="_blank" class="social-btn">
+                <i class="fab fa-linkedin-in"></i>
+            </a>
+            <a href="https://protonmail.com" target="_blank" class="social-btn">
+                <i class="fas fa-envelope"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="top" class="hero">
+        <button class="cta-button">Launch App</button>
+    </section>
+
+    <!-- Admin Login Form (initially hidden) -->
+    <section id="admin-login-section" class="hidden">
+        <h2>Admin Login</h2>
+        <form id="admin-login-form">
+            <label for="admin-username">Username:</label>
+            <input type="text" id="admin-username" name="admin-username" required>
+            <br>
+            <label for="admin-password">Password:</label>
+            <input type="password" id="admin-password" name="admin-password" required>
+            <br>
+            <button type="submit">Login</button>
+        </form>
+        <p id="admin-login-error" class="hidden" style="color: red;">Invalid credentials, please try again.</p>
+    </section>
+
+    <!-- Membership Plans Section -->
+    <section id="membership" class="content-section">
+        <h2>Membership Plans</h2>
+        <p>Choose the plan that suits you best. We offer tiered memberships with exclusive features and benefits for each level.</p>
+        
+        <div class="membership-plans">
+            <div class="plan">
+                <h3>Monthly</h3>
+                <p>$20 per month</p>
+                <a href="payment.html?plan=monthly" class="subscribe-btn">Get Access</a>
+            </div>
+            <div class="plan">
+                <h3>3 Months</h3>
+                <p>$50 every 3 months</p>
+                <a href="payment.html?plan=3months" class="subscribe-btn">Get Access</a>
+            </div>
+            <div class="plan">
+                <h3>6 Months</h3>
+                <p>$80 every 6 months</p>
+                <a href="payment.html?plan=6months" class="subscribe-btn">Get Access</a>
+            </div>
+            <div class="plan">
+                <h3>Yearly</h3>
+                <p>$100 per year</p>
+                <a href="payment.html?plan=yearly" class="subscribe-btn">Get Access</a>
+            </div>
+        </div>
+
+        <!-- Payment Options -->
+        <div class="payment-options">
+            <h3>Payment Options</h3>
+            <div class="payment-methods">
+                <i class="fas fa-credit-card"></i> Debit/Visa
+                <i class="fab fa-paypal"></i> PayPal
+                <i class="fab fa-bitcoin"></i> Crypto Payments
+            </div>
+        </div>
+    </section>
+
+    <!-- Calendar Section -->
+    <section id="calendar" class="content-section">
+        <h2>Calendar</h2>
+        <p>Stay up to date with upcoming events, trading webinars, and market updates.</p>
+    </section>
+
+    <!-- Leaderboards Section -->
+    <section id="leaderboards" class="content-section">
+        <h2>Leaderboards</h2>
+        <p>View top-performing traders and investors from our community. Compete for top spots and showcase your skills.</p>
+    </section>
+
+    <!-- Features and Integrations Section -->
+    <section id="features" class="content-section">
+        <h2>Features and Integrations</h2>
+        <p>Explore our wide range of tools and integrations that streamline your trading experience.</p>
+    </section>
+
+    <!-- Token Swap Section -->
+    <section id="token-swap" class="content-section hidden">
+        <h2>Token Swap (Powered by Uniswap)</h2>
+        <p>Connect your wallet and swap tokens instantly.</p>
+
+        <button id="connect-wallet" class="cta-button">Connect Wallet</button>
+
+        <div id="swap-interface" class="hidden">
+            <div class="swap-container">
+                <label for="input-token">From:</label>
+                <select id="input-token">
+                    <option value="ETH">ETH</option>
+                    <option value="DAI">DAI</option>
+                    <!-- Add more tokens as needed -->
+                </select>
+
+                <input type="number" id="input-amount" placeholder="Amount">
+
+                <label for="output-token">To:</label>
+                <select id="output-token">
+                    <option value="DAI">DAI</option>
+                    <option value="ETH">ETH</option>
+                </select>
+
+                <button id="swap-button" class="cta-button">Swap</button>
+            </div>
+        </div>
+
+        <p id="transaction-status" class="hidden"></p>
+    </section>
+</body>
+</html>

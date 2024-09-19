@@ -1,0 +1,163 @@
+// JavaScript for Admin Login and Dropdown Menu
+
+// Predefined admin credentials
+const adminCredentials = {
+    username: 'admin',   // Replace with your admin username
+    password: 'password' // Replace with your admin password
+};
+
+const logoBtn = document.getElementById('logo-btn');
+const dropdownMenu = document.getElementById('dropdown-menu');
+const adminLoginLink = document.getElementById('admin-login');
+const adminLoginSection = document.getElementById('admin-login-section');
+const adminLoginForm = document.getElementById('admin-login-form');
+const adminLoginError = document.getElementById('admin-login-error');
+const launchAppButton = document.querySelector('.cta-button'); // Launch App button
+const tokenSwapSection = document.getElementById('token-swap');
+
+// Simulated check for admin (replace with actual logic)
+function isAdmin() {
+    // Return true if the user is an admin, false otherwise
+    return true; // Example, you can add real logic to check for admin status
+}
+
+// Simulated check for membership (replace with actual logic)
+function hasMembership() {
+    // Return true if the user has a membership, false otherwise
+    return true; // Example, you can add real logic to check membership status
+}
+
+// Initial hiding of Token Swap section
+tokenSwapSection.classList.add('hidden');
+
+// Show admin login if the user is an admin
+document.addEventListener('DOMContentLoaded', function() {
+    if (isAdmin()) {
+        adminLoginLink.classList.remove('hidden');
+    }
+});
+
+// Toggle the dropdown menu visibility when clicking on the logo button
+logoBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    dropdownMenu.classList.toggle('active');
+});
+
+// Close the dropdown menu when clicking outside of it
+window.addEventListener('click', function(event) {
+    if (!logoBtn.contains(event.target) && !dropdownMenu.contains(event.target)) {
+        dropdownMenu.classList.remove('active');
+    }
+});
+
+// Close the dropdown menu if the escape key is pressed
+window.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        dropdownMenu.classList.remove('active');
+    }
+});
+
+// Show admin login form when "Admin Login" is clicked
+adminLoginLink.addEventListener('click', () => {
+    dropdownMenu.classList.remove('active'); // Hide the dropdown
+    adminLoginSection.classList.remove('hidden'); // Show the login form
+});
+
+// Handle admin login form submission
+adminLoginForm.addEventListener('submit', (e) => {
+    e.preventDefault(); // Prevent form submission
+
+    const username = document.getElementById('admin-username').value;
+    const password = document.getElementById('admin-password').value;
+
+    // Check credentials
+    if (username === adminCredentials.username && password === adminCredentials.password) {
+        alert('Login successful! Redirecting to admin dashboard...');
+        window.location.href = 'admin-dashboard.html'; // Replace with your admin dashboard URL
+    } else {
+        adminLoginError.classList.remove('hidden'); // Show error message
+    }
+});
+
+// Uniswap Token Swap Integration
+
+// Include ethers.js to interact with Uniswap
+const { ethers } = window;
+
+const connectWalletButton = document.getElementById('connect-wallet');
+const swapInterface = document.getElementById('swap-interface');
+const swapButton = document.getElementById('swap-button');
+const transactionStatus = document.getElementById('transaction-status');
+
+let provider, signer;
+
+// Only allow access to Token Swap if the user clicks "Launch App" and is either an admin or has a membership
+launchAppButton.addEventListener('click', () => {
+    if (isAdmin() || hasMembership()) {
+        tokenSwapSection.classList.remove('hidden'); // Show Token Swap section
+    } else {
+        alert('You must be an admin or have a membership to access this feature.');
+    }
+});
+
+// Function to connect wallet via MetaMask
+async function connectWallet() {
+    if (window.ethereum) {
+        try {
+            // Request account access
+            await window.ethereum.request({ method: 'eth_requestAccounts' });
+            provider = new ethers.providers.Web3Provider(window.ethereum);
+            signer = provider.getSigner();
+            transactionStatus.innerHTML = 'Wallet connected!';
+            transactionStatus.classList.remove('hidden');
+            swapInterface.classList.remove('hidden');
+        } catch (error) {
+            console.error('User rejected wallet connection:', error);
+            transactionStatus.innerHTML = 'Wallet connection failed.';
+            transactionStatus.classList.remove('hidden');
+        }
+    } else {
+        alert('MetaMask is not installed!');
+    }
+}
+
+connectWalletButton.addEventListener('click', connectWallet);
+
+// Function to handle token swaps
+async function swapTokens() {
+    const inputToken = document.getElementById('input-token').value;
+    const outputToken = document.getElementById('output-token').value;
+    const inputAmount = document.getElementById('input-amount').value;
+
+    if (!inputAmount || isNaN(inputAmount) || inputAmount <= 0) {
+        alert('Please enter a valid amount.');
+        return;
+    }
+
+    try {
+        // Uniswap contract interaction logic
+        const UniswapRouter = new ethers.Contract(
+            '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f', // Uniswap V2 factory address
+            ['function swapExactTokensForTokens(uint amountIn, uint amountOutMin, address[] calldata path, address to, uint deadline) external returns (uint[] memory amounts)'],
+            signer
+        );
+
+        // Example swap logic (adjust as needed based on the token contract)
+        const tx = await UniswapRouter.swapExactTokensForTokens(
+            ethers.utils.parseUnits(inputAmount, 18), // Amount in
+            0, // Amount out minimum
+            [inputToken, outputToken], // Path (input -> output)
+            await signer.getAddress(), // To address
+            Math.floor(Date.now() / 1000) + 60 * 20 // Deadline (20 minutes)
+        );
+
+        transactionStatus.innerHTML = 'Swap initiated... Transaction Hash: ' + tx.hash;
+        transactionStatus.classList.remove('hidden');
+    } catch (error) {
+        console.error('Swap failed:', error);
+        transactionStatus.innerHTML = 'Swap failed. Please try again.';
+        transactionStatus.classList.remove('hidden');
+    }
+}
+
+swapButton.addEventListener('click', swapTokens);
